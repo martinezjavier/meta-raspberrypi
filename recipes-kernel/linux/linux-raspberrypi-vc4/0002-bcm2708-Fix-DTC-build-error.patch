@@ -1,0 +1,38 @@
+From 2d0adbb07ccccef248173af3ac090ca867cf3460 Mon Sep 17 00:00:00 2001
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Date: Mon, 9 Nov 2015 16:17:28 -0300
+Subject: [PATCH 1/1] bcm2708: Fix DTC build error
+
+Commit fa6a6d220c4c ("bcm2708: Use #include in dtsi files") changed the bcm*
+DTSI files to use the pre-processor #include directive instead the /include/
+but forgot to change the arch/arm/boot/dts/bcm2708.dtsi file. Later commit
+7f04e14bebf1 ("fixup! bcm2708: Use #include in dtsi files") tried to do that
+change but introduced a build error:
+
+DTC     arch/arm/boot/dts/bcm2708-rpi-b.dtb
+In file included from arch/arm/boot/dts/bcm2708-rpi-b.dts:3:0:
+arch/arm/boot/dts/bcm2708.dtsi:1:9: error: #include expects "FILENAME" or <FILENAME>
+            ^
+scripts/Makefile.lib:293: recipe for target 'arch/arm/boot/dts/bcm2708-rpi-b.dtb' failed
+make[1]: *** [arch/arm/boot/dts/bcm2708-rpi-b.dtb] Error 1
+arch/arm/Makefile:327: recipe for target 'bcm2708-rpi-b.dtb' failed
+make: *** [bcm2708-rpi-b.dtb] Error 2
+
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+---
+ arch/arm/boot/dts/bcm2708.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/bcm2708.dtsi b/arch/arm/boot/dts/bcm2708.dtsi
+index a70fa3107ac2..b954255bb860 100644
+--- a/arch/arm/boot/dts/bcm2708.dtsi
++++ b/arch/arm/boot/dts/bcm2708.dtsi
+@@ -1,4 +1,4 @@
+-#include/ "bcm2708_common.dtsi"
++#include "bcm2708_common.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm2708";
+-- 
+2.4.3
+
