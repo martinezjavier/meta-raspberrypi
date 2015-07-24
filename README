@@ -25,6 +25,7 @@ Contents:
     2.K. Boot to U-Boot
     2.L. Image with Initramfs
     2.M. Device tree support
+    2.O. Graphics stack
 3. Extra apps
     3.A. omxplayer
 4. Source code and mirrors
@@ -194,6 +195,14 @@ kernels.
 
 NOTE: KERNEL_DEVICETREE is default enabled for kernel >= 3.18 and always disabled for
       older kernel versions.
+
+2.O. Graphic stacks
+===================
+The Raspberry Pi boards can use one of two graphics stacks: The userland
+user-space driver or the vc4 DRM/KMS kernel driver. By default userland
+is used since the vc4 is still experimental. But this can be changed by
+setting the following in the local.conf
+DISTRO_FEATURES_append = " vc4-gfx"
 
 3. Extra apps
 =============
