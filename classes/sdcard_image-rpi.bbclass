@@ -1,5 +1,4 @@
 inherit image_types
-inherit linux-raspberrypi-base
 
 #
 # Create an image that can by written onto a SD card using dd.
@@ -71,6 +70,11 @@ SDIMG = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.rpi-sdimg"
 # Additional files and/or directories to be copied into the vfat partition from the IMAGE_ROOTFS.
 FATPAYLOAD ?= ""
 
+# Device Tree Overlays are assumed to be suffixed by '-overlay.dtb' string and will be put in a dedicated folder
+DT_ALL = "${@d.getVar('KERNEL_DEVICETREE', True) or ''}"
+DT_OVERLAYS = "${@oe.utils.str_filter('\S+\-overlay\.dtb$', '${DT_ALL}', d)}"
+DT_ROOT = "${@oe.utils.str_filter_out('\S+\-overlay\.dtb$', '${DT_ALL}', d)}"
+
 IMAGEDATESTAMP = "${@time.strftime('%Y.%m.%d',time.gmtime())}"
 
 IMAGE_CMD_rpi-sdimg () {
@@ -85,9 +89,6 @@ IMAGE_CMD_rpi-sdimg () {
 	SDIMG_SIZE=$(expr ${IMAGE_ROOTFS_ALIGNMENT} + ${BOOT_SPACE_ALIGNED} + ${ROOTFS_SIZE_ALIGNED})
 
 	echo "Creating filesystem with Boot partition ${BOOT_SPACE_ALIGNED} KiB and RootFS ${ROOTFS_SIZE_ALIGNED} KiB"
-
-	# Check if we are building with device tree support
-	DTS="${@get_dts(d, None)}"
 
 	# Initialize sdcard image file
 	dd if=/dev/zero of=${SDIMG} bs=1024 count=0 seek=${SDIMG_SIZE}
@@ -111,11 +112,7 @@ IMAGE_CMD_rpi-sdimg () {
 		mcopy -i ${WORKDIR}/boot.img -s ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}${KERNEL_INITRAMFS}-${MACHINE}.bin ::uImage
 		;;
 	*)
-		if test -n "${DTS}"; then
-			# Device Tree Overlays are assumed to be suffixed by '-overlay.dtb' string and will be put in a dedicated folder
-			DT_OVERLAYS="${@split_overlays(d, 0)}"
-			DT_ROOT="${@split_overlays(d, 1)}"
-
+		if test -n "${KERNEL_DEVICETREE}"; then
 			# Copy board device trees to root folder
 			for DTB in ${DT_ROOT}; do
 				DTB_BASE_NAME=`basename ${DTB} .dtb`
