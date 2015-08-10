@@ -1,0 +1,33 @@
+From 89ac9c2dae902bfa73752b4a85e27b5a2cfd13ef Mon Sep 17 00:00:00 2001
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Date: Mon, 10 Aug 2015 19:32:23 +0200
+Subject: [PATCH] ARM: dts: Enable audio device node in RPi2 DTS
+
+The RaspberryPi 2 DTS leaves the board audio support disabled to allow
+DT overlays to enable if needed or to pass a parameter to the firmware
+using the config.txt file. But we are not using DT overlays and want
+the audio to be enable by default.
+
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+---
+ arch/arm/boot/dts/bcm2709-rpi-2-b.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/bcm2709-rpi-2-b.dts b/arch/arm/boot/dts/bcm2709-rpi-2-b.dts
+index 712ca455cc46..8977dea1fb83 100644
+--- a/arch/arm/boot/dts/bcm2709-rpi-2-b.dts
++++ b/arch/arm/boot/dts/bcm2709-rpi-2-b.dts
+@@ -120,6 +120,10 @@
+ 	};
+ };
+ 
++&audio {
++	status = "okay";
++};
++
+ / {
+ 	__overrides__ {
+ 		uart0 = <&uart0>,"status";
+-- 
+2.4.3
+

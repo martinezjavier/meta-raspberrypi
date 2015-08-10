@@ -12,5 +12,6 @@ SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'vc4-gfx', 'file://0002-ARM-
 SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'vc4-gfx', 'file://0003-drm-vc4-Use-the-fbdev_cma-helpers.patch', '', d)}"
 SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'vc4-gfx', 'file://0004-drm-vc4-Allow-vblank-to-be-disabled.patch', '', d)}"
 SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'vc4-gfx', 'file://0005-drm-vc4-Disable-KMS-operations.patch', '', d)}"
+SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'vc4-gfx', 'file://0006-ARM-dts-Enable-audio-device-node-in-RPi2-DTS.patch', '', d)}"
 
 require linux-raspberrypi.inc
