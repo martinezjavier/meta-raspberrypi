@@ -24,6 +24,7 @@ Contents:
     2.J. Boot to U-Boot
     2.K. Image with Initramfs
     2.L. Device tree support
+    2.M. Graphic stacks
 3. Extra apps
     3.A. omxplayer
 4. Source code and mirrors
@@ -188,6 +189,22 @@ kernels.
 
 NOTE: KERNEL_DEVICETREE is default enabled for kernel >= 3.18 and always disabled for
       older kernel versions.
+
+2.M. Graphic stacks
+===================
+The Raspberry Pi boards can use one of two graphics stacks: The userland
+user-space driver or the vc4 DRM/KMS kernel driver. By default userland
+is used since the vc4 is still experimental. But this can be changed by
+modifying the defaults for the kernel, egl, gles2, libgl and mesa providers.
+
+So to use the experimental vc4 DRM/KMS kernel, add the following to the
+conf/local.conf file:
+
+PREFERRED_PROVIDER_virtual/kernel = "linux-raspberrypi-vc4"
+PREFERRED_PROVIDER_virtual/egl = "mesa"
+PREFERRED_PROVIDER_virtual/libgles2 = "mesa"
+PREFERRED_PROVIDER_virtual/libgl = "mesa"
+PREFERRED_PROVIDER_virtual/mesa = "mesa"
 
 3. Extra apps
 =============
